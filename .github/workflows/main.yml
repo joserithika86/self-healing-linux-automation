@@ -1,8 +1,29 @@
-{
-  "name": "jenkins-sample-app",
-  "version": "1.0.0",
-  "scripts": {
-    "test:unit": "echo 'Running Unit Tests... Passed!'",
-    "test:integration": "echo 'Running Integration Tests... Passed!'"
-  }
+pipeline {
+    agent any
+
+    stages {
+        stage('Install Dependencies') {
+            steps {
+                sh 'npm install'
+            }
+        }
+
+        stage('Run Unit Tests') {
+            steps {
+                sh 'npm run test:unit'
+            }
+        }
+
+        stage('Run Integration Tests') {
+            steps {
+                sh 'npm run test:integration'
+            }
+        }
+
+        stage('Archive Results') {
+            steps {
+                archiveArtifacts artifacts: '**/test-results/*', fingerprint: true
+            }
+        }
+    }
 }
